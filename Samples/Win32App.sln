@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31911.196
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32AppSample", "Win32App.vcxproj", "{B911E146-5EBE-43FD-9034-54B17D062701}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "inc_win32app", "inc_win32app", "{86074B73-E408-4EB5-8707-6C9CB73753A9}"
+	ProjectSection(SolutionItems) = preProject
+		..\inc\win32app\is_detected.h = ..\inc\win32app\is_detected.h
+		..\inc\win32app\reference_waiter.h = ..\inc\win32app\reference_waiter.h
+		..\inc\win32app\ResizeableDialog.h = ..\inc\win32app\ResizeableDialog.h
+		..\inc\win32app\win32_app_helpers.h = ..\inc\win32app\win32_app_helpers.h
+		..\inc\win32app\Win32UI.h = ..\inc\win32app\Win32UI.h
+		..\inc\win32app\XamlWin32Helpers.h = ..\inc\win32app\XamlWin32Helpers.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{AE3517FB-D1B1-41AE-9233-11A0407764B6}"
+	ProjectSection(SolutionItems) = preProject
+		..\NuGet\Package-Win32AppHelpers.ps1 = ..\NuGet\Package-Win32AppHelpers.ps1
+		..\NuGet\Win32AppHelpers.nuspec = ..\NuGet\Win32AppHelpers.nuspec
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B911E146-5EBE-43FD-9034-54B17D062701}.Debug|x64.ActiveCfg = Debug|x64
+		{B911E146-5EBE-43FD-9034-54B17D062701}.Debug|x64.Build.0 = Debug|x64
+		{B911E146-5EBE-43FD-9034-54B17D062701}.Debug|x86.ActiveCfg = Debug|Win32
+		{B911E146-5EBE-43FD-9034-54B17D062701}.Debug|x86.Build.0 = Debug|Win32
+		{B911E146-5EBE-43FD-9034-54B17D062701}.Release|x64.ActiveCfg = Release|x64
+		{B911E146-5EBE-43FD-9034-54B17D062701}.Release|x64.Build.0 = Release|x64
+		{B911E146-5EBE-43FD-9034-54B17D062701}.Release|x86.ActiveCfg = Release|Win32
+		{B911E146-5EBE-43FD-9034-54B17D062701}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {93BE1C07-8840-4E01-BF4A-67EBC712E657}
+	EndGlobalSection
+EndGlobal

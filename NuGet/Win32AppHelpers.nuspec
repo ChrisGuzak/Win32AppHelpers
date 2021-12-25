@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Win32AppHelpers</id>
+        <version>0.0.06</version>
+        <title>Win32 App Helpers</title>
+        <authors>chris_guzak@msn.com</authors>
+        <owners>chris_guzak@msn.com</owners>
+        <license type="expression">MIT</license>
+        <projectUrl>https://github.com/ChrisGuzak/Win32AppHelpers.git</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Library for creating Win32 style GUI programs.</description>
+        <tags>windows native C++</tags>
+        <dependencies>
+            <dependency id="Microsoft.Windows.ImplementationLibrary" version="1.0.201120.3"/>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="Win32AppHelpers.targets" target="build\native\" />
+        <file src="..\inc\**" target="inc\" />
+    </files>
+</package>
