@@ -33,6 +33,12 @@ namespace win32app
             static constexpr bool is_valid = is_detected<resultT, T>::value;
         };
 
+        template<typename T> struct msg<WM_CREATE, T>
+        {
+            template<typename T> using resultT = decltype(std::declval<T>().Create());
+            static constexpr bool is_valid = is_detected<resultT, T>::value;
+        };
+
         template<typename T> struct msg<WM_DESTROY, T>
         {
             template<typename T> using resultT = decltype(std::declval<T>().Destroy());
@@ -80,6 +86,12 @@ namespace win32app
                 {
                     const WORD dx = LOWORD(lparam), dy = HIWORD(lparam);
                     return that->Size(dx, dy);
+                }
+                break;
+
+                case WM_CREATE: if constexpr (msg<WM_CREATE, T>::is_valid)
+                {
+                    return that->Create();
                 }
                 break;
 
