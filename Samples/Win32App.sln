@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "inc_win32app", "inc_win32ap
 	ProjectSection(SolutionItems) = preProject
 		..\inc\win32app\is_detected.h = ..\inc\win32app\is_detected.h
 		..\inc\win32app\LogWindow.h = ..\inc\win32app\LogWindow.h
+		..\README.md = ..\README.md
 		..\inc\win32app\reference_waiter.h = ..\inc\win32app\reference_waiter.h
 		..\inc\win32app\ResizeableDialog.h = ..\inc\win32app\ResizeableDialog.h
 		..\inc\win32app\win32_app_helpers.h = ..\inc\win32app\win32_app_helpers.h

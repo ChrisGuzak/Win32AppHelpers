@@ -47,8 +47,7 @@ struct AppWindow
     }
 };
 
-_Use_decl_annotations_
-int APIENTRY wWinMain(HINSTANCE, HINSTANCE, PWSTR lpCmdLine, int nCmdShow)
+_Use_decl_annotations_ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, PWSTR lpCmdLine, int nCmdShow)
 {
     auto coInit = wil::CoInitializeEx(COINIT_APARTMENTTHREADED);
     std::make_unique<AppWindow>()->Show(nCmdShow);
