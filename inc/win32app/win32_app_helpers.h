@@ -206,5 +206,30 @@ namespace win32app
             DispatchMessageW(&msg);
         }
     }
+
+    // T must have wil::unique_hwnd m_window.
+    template <typename T>
+    void enter_com_message_loop(T& instance, UINT nCmdShow, wil::unique_event& shutdownSignal)
+    {
+        auto w = instance.m_window.get();
+        ShowWindow(w, nCmdShow);
+        UpdateWindow(w);
+
+        // Ensure a continuous Xaml lifetime on this thread.
+        auto xamlManager = winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
+
+        DWORD index{};
+        HANDLE waitArray[]{ shutdownSignal.get() };
+        FAIL_FAST_IF_FAILED(CoWaitForMultipleHandles(COWAIT_DISPATCH_CALLS | COWAIT_DISPATCH_WINDOW_MESSAGES, INFINITE,
+            ARRAYSIZE(waitArray), waitArray, &index));
+
+        // Need an extra message loop to enable Xaml to finish its rundown.
+        PostQuitMessage(0); // ensures we terminate the loop when Xaml is done.
+        MSG msg{};
+        while (GetMessageW(&msg, nullptr, 0, 0))
+        {
+            DispatchMessageW(&msg);
+        }
+    }
 }
 
