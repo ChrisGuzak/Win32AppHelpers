@@ -39,6 +39,11 @@ namespace win32app::details
                 static_assert(msg<WM_MOVE, decltype(*this)>::is_valid);
                 return 0;
             }
+            LRESULT Create()
+            {
+                static_assert(msg<WM_CREATE, decltype(*this)>::is_valid);
+                return 0;
+            }
             LRESULT Destroy()
             {
                 static_assert(msg<WM_DESTROY, decltype(*this)>::is_valid);

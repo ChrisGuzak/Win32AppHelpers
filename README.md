@@ -1,8 +1,10 @@
 # Win32 App Helpers for C++
 
-These helpers make writing Win32 GUI style applications simpler. They include the ability to create top level windows simply, run the message pump, and handle message concisely, by implementing functions with specific names on the class that represents the window. 
+Helpers to make writing Win32 GUI style applications simpler. They include the ability to create
+top level windows, run the message pump, and handle message concisely, by implementing functions
+with specific names on the class that represents the window.
 
-## A 56 line Win32 App
+A 56 line Win32 App
 
 ```cpp
 #include "pch.h"
@@ -53,8 +55,7 @@ struct AppWindow
     }
 };
 
-_Use_decl_annotations_
-int APIENTRY wWinMain(HINSTANCE, HINSTANCE, PWSTR lpCmdLine, int nCmdShow)
+_Use_decl_annotations_ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, PWSTR lpCmdLine, int nCmdShow)
 {
     auto coInit = wil::CoInitializeEx(COINIT_APARTMENTTHREADED);
     std::make_unique<AppWindow>()->Show(nCmdShow);
@@ -62,7 +63,7 @@ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, PWSTR lpCmdLine, int nCmdShow)
 }
 ```
 
-## Simple App (20 lines)
+Simple App (20 lines)
 
 ```cpp
 struct SimplestAppWindow
@@ -82,29 +83,58 @@ struct SimplestAppWindow
     }
 };
 
-void TestSimpleCase(int nCmdShow = SW_SHOWDEFAULT)
+_Use_decl_annotations_ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, PWSTR lpCmdLine, int nCmdShow)
 {
     std::make_unique<SimplestAppWindow>()->Show(nCmdShow);
 }
 ```
 
-## win32app/win32_app_helpers.h Functions
+### Consuming the helpers
 
-These functions use a template parameter to define the class that represents the window being created. That class must have a member variable of `wil::unique_hwnd` named `m_window` as these functions will refer to that and help manage its lifetime.
+There are 2 methods for consuming Win32AppHelpers.
 
-### create_top_level_window()
+#### Using a git submodule
+
+Add `Win32AppHelpers` as a sub-module to your repository.
+
+```
+git submodule add https://github.com/ChrisGuzak/Win32AppHelpers.git
+```
+
+Hand edit the .vcxproj file to reference `Win32AppHelpers\inc\include_this_dir.targets` just below the 
+import of `Microsoft.Cpp.Default.props`, using the relative path to the submodule location.
+
+```xml
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="..\Win32AppHelpers\inc\include_this_dir.targets" />
+```
+
+#### Using the NuGet feed
+
+Setup a package feed to reference `https://chrisguzak.pkgs.visualstudio.com/_packaging/ChrisGuzak/nuget/v3/index.json` 
+and then add `Win32AppHelpers` using the NuGet package manager.
+
+## Documentation
+
+### win32app/win32_app_helpers.h Functions
+
+These functions use a template parameter to define the class that represents the window being created. 
+That class must have a member variable of type `wil::unique_hwnd` named `m_window` as these functions 
+refer to that and manage its lifetime.
+
+#### create_top_level_window()
 
 Create the window and store it in `m_window`.
 
-## create_top_level_window_for_xaml()
+#### create_top_level_window_for_xaml()
 
 Create the window and store it in `m_window`, but use window styles that optimize using Xaml for the whole client area.
 
-### enter_simple_message_loop()
+#### enter_simple_message_loop()
 
 Message loop every Win32 GUI thread must implement.
 
-## win32app/reference_waiter.h
+### win32app/reference_waiter.h
 
 `reference_waiter` is useful for multi-window applications that create a thread for each top level window.
 This enables coordinating process rundown, waiting for the last window to be closed.
@@ -138,7 +168,7 @@ struct AppWindow
         }
     }
 
-int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, int nCmdShow)
+_Use_decl_annotations_ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, PWSTR lpCmdLine, int nCmdShow)
 {
     auto coInit = wil::CoInitializeEx();
 
@@ -151,12 +181,17 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR lpCmdLine, int nCmdS
     AppWindow::WaitUntilAllWindowsAreClosed();
     return 0;
 }
-'''
+```
 
-## win32app/ResizeableDialog.h
+### win32app/ResizeableDialog.h
 
 Helpers for making dialog template based applications that support resizing.
 
-## win32app/Win32UI.h
+### win32app/Win32UI.h
 
 An add-hoc set of helpers for dealing with Win32. For example a function to return the window title as a `std::wstring`.
+
+### win32app/LogWindow.h
+
+A way to use a listview in group mode to log output.
+

@@ -33,6 +33,12 @@ namespace win32app
             static constexpr bool is_valid = is_detected<resultT, T>::value;
         };
 
+        template<typename T> struct msg<WM_CREATE, T>
+        {
+            template<typename T> using resultT = decltype(std::declval<T>().Create());
+            static constexpr bool is_valid = is_detected<resultT, T>::value;
+        };
+
         template<typename T> struct msg<WM_DESTROY, T>
         {
             template<typename T> using resultT = decltype(std::declval<T>().Destroy());
@@ -80,6 +86,12 @@ namespace win32app
                 {
                     const WORD dx = LOWORD(lparam), dy = HIWORD(lparam);
                     return that->Size(dx, dy);
+                }
+                break;
+
+                case WM_CREATE: if constexpr (msg<WM_CREATE, T>::is_valid)
+                {
+                    return that->Create();
                 }
                 break;
 
@@ -191,6 +203,31 @@ namespace win32app
         while (GetMessageW(&msg, nullptr, 0, 0))
         {
             TranslateMessage(&msg);
+            DispatchMessageW(&msg);
+        }
+    }
+
+    // T must have wil::unique_hwnd m_window.
+    template <typename T>
+    void enter_com_message_loop(T& instance, UINT nCmdShow, wil::unique_event& shutdownSignal)
+    {
+        auto w = instance.m_window.get();
+        ShowWindow(w, nCmdShow);
+        UpdateWindow(w);
+
+        // Ensure a continuous Xaml lifetime on this thread.
+        auto xamlManager = winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
+
+        DWORD index{};
+        HANDLE waitArray[]{ shutdownSignal.get() };
+        FAIL_FAST_IF_FAILED(CoWaitForMultipleHandles(COWAIT_DISPATCH_CALLS | COWAIT_DISPATCH_WINDOW_MESSAGES, INFINITE,
+            ARRAYSIZE(waitArray), waitArray, &index));
+
+        // Need an extra message loop to enable Xaml to finish its rundown.
+        PostQuitMessage(0); // ensures we terminate the loop when Xaml is done.
+        MSG msg{};
+        while (GetMessageW(&msg, nullptr, 0, 0))
+        {
             DispatchMessageW(&msg);
         }
     }
