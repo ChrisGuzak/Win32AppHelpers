@@ -12,7 +12,7 @@ struct AppWindow
         ULONG_PTR gdiplusToken;
         Gdiplus::GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
 
-        win32app::create_top_level_window(*this, L"Win32XamlDialogWindow");
+        win32app::create_top_level_window(*this, L"Win32AppWindow");
         const auto dpi = GetDpiForWindow(m_window.get());
         const int dx = (600 * dpi) / 96;
         const int dy = (800 * dpi) / 96;
