@@ -1,5 +1,6 @@
 #pragma once
 #include <winuser.h>
+#include <wil/win32_helpers.h>
 #include "is_detected.h"
 
 namespace win32app
