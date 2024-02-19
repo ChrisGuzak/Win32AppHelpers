@@ -2,58 +2,60 @@
 #include <winuser.h>
 #undef GetCurrentTime // avoid conflict with winuser.h
 
-#include <winrt/windows.ui.xaml.hosting.h>
+#include <wil/win32_helpers.h>
+#include <string_view>
+#include <winrt/Windows.UI.Xaml.Hosting.h>
 
 #include "is_detected.h"
 
 namespace win32app
 {
-    namespace details
-    {
-        // Window Message dispatch implementation
-        // These types map message values to a function prototype that can handle them.
-        // Clients implement the function of the given name and parameter list and
-        // messages will get dispatched to them.
-        //
-        // The 'wparam' and 'lparam' are converted into message specific values and
-        // passed to the function.
-        // Conversions are to the Win32 primitive representation to enable the most flexibility.
+namespace details
+{
+    // Window Message dispatch implementation
+    // These types map message values to a function prototype that can handle them.
+    // Clients implement the function of the given name and parameter list and
+    // messages will get dispatched to them.
+    //
+    // The 'wparam' and 'lparam' are converted into message specific values and
+    // passed to the function.
+    // Conversions are to the Win32 primitive representation to enable the most flexibility.
 
         template<unsigned int value_, typename T> struct msg
-        {
-            static constexpr unsigned int value = value_;
-            static constexpr bool is_valid = false;
-        };
+    {
+        static constexpr unsigned int value = value_;
+        static constexpr bool is_valid = false;
+    };
 
         template<typename T> struct msg<WM_SIZE, T>
-        {
+    {
             template<typename T> using resultT = decltype(std::declval<T>().Size(std::declval<unsigned short>(), std::declval<unsigned short>()));
-            static constexpr bool is_valid = is_detected<resultT, T>::value;
-        };
+        static constexpr bool is_valid = is_detected<resultT, T>::value;
+    };
 
         template<typename T> struct msg<WM_MOVE, T>
-        {
+    {
             template<typename T> using resultT = decltype(std::declval<T>().Move(std::declval<unsigned short>(), std::declval<unsigned short>()));
-            static constexpr bool is_valid = is_detected<resultT, T>::value;
-        };
+        static constexpr bool is_valid = is_detected<resultT, T>::value;
+    };
 
         template<typename T> struct msg<WM_CREATE, T>
-        {
+    {
             template<typename T> using resultT = decltype(std::declval<T>().Create());
-            static constexpr bool is_valid = is_detected<resultT, T>::value;
-        };
+        static constexpr bool is_valid = is_detected<resultT, T>::value;
+    };
 
         template<typename T> struct msg<WM_DESTROY, T>
-        {
+    {
             template<typename T> using resultT = decltype(std::declval<T>().Destroy());
-            static constexpr bool is_valid = is_detected<resultT, T>::value;
-        };
+        static constexpr bool is_valid = is_detected<resultT, T>::value;
+    };
 
         template<typename T> struct msg<WM_PAINT, T>
-        {
+    {
             template<typename T> using resultT = decltype(std::declval<T>().Paint(std::declval<HDC>(), std::declval<const PAINTSTRUCT&>()));
-            static constexpr bool is_valid = is_detected<resultT, T>::value;
-        };
+        static constexpr bool is_valid = is_detected<resultT, T>::value;
+    };
 
         template<typename T> struct msg<WM_COMMAND, T>
         {
@@ -179,61 +181,76 @@ namespace win32app
         }
     }
 
-    // The created window is stored in T.m_window (must be wil::unique_hwnd).
-    template <typename T>
-    void create_top_level_window(T& instance, PCWSTR className, PCWSTR title = nullptr)
+// The created window is stored in T.m_window (must be wil::unique_hwnd).
+template <typename T>
+void create_top_level_window(T& instance, PCWSTR className, PCWSTR title = nullptr)
+{
+    return details::create_top_level_window<T>(instance, WS_OVERLAPPEDWINDOW, 0, className, title);
+}
+
+// the created window is stored in T.m_window
+// T must have wil::unique_hwnd m_window.
+template <typename T>
+void create_top_level_window_for_xaml(T& instance, PCWSTR className, PCWSTR title = nullptr)
+{
+    return details::create_top_level_window<T>(instance,
+        WS_OVERLAPPEDWINDOW, WS_EX_NOREDIRECTIONBITMAP, className, title);
+}
+
+// T must have wil::unique_hwnd m_window.
+template <typename T>
+void enter_simple_message_loop(T& instance, UINT nCmdShow)
+{
+    auto w = instance.m_window.get();
+    ShowWindow(w, nCmdShow);
+    UpdateWindow(w);
+
+    MSG msg{};
+    while (GetMessageW(&msg, nullptr, 0, 0))
     {
-        return details::create_top_level_window<T>(instance, WS_OVERLAPPEDWINDOW, 0, className, title);
+        TranslateMessage(&msg);
+        DispatchMessageW(&msg);
     }
+}
 
-    // the created window is stored in T.m_window
-    // T must have wil::unique_hwnd m_window.
-    template <typename T>
-    void create_top_level_window_for_xaml(T& instance, PCWSTR className, PCWSTR title = nullptr)
+// T must have wil::unique_hwnd m_window.
+template <typename T>
+void enter_com_message_loop(T& instance, UINT nCmdShow, wil::unique_event& shutdownSignal)
+{
+    auto w = instance.m_window.get();
+    ShowWindow(w, nCmdShow);
+    UpdateWindow(w);
+
+    // Ensure a continuous Xaml lifetime on this thread.
+    auto xamlManager = winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
+
+    DWORD index{};
+    HANDLE waitArray[]{ shutdownSignal.get() };
+    FAIL_FAST_IF_FAILED(CoWaitForMultipleHandles(COWAIT_DISPATCH_CALLS | COWAIT_DISPATCH_WINDOW_MESSAGES, INFINITE,
+        ARRAYSIZE(waitArray), waitArray, &index));
+
+    // Need an extra message loop to enable Xaml to finish its rundown.
+    PostQuitMessage(0); // ensures we terminate the loop when Xaml is done.
+    MSG msg{};
+    while (GetMessageW(&msg, nullptr, 0, 0))
     {
-        return details::create_top_level_window<T>(instance,
-            WS_OVERLAPPEDWINDOW, WS_EX_NOREDIRECTIONBITMAP, className, title);
+        DispatchMessageW(&msg);
     }
+}
 
-    // T must have wil::unique_hwnd m_window.
-    template <typename T>
-    void enter_simple_message_loop(T& instance, UINT nCmdShow)
+template <typename T = char> // default to UTF-8, use wchar_t for UTF-16
+std::basic_string_view<T> get_resource_view(PCWSTR name, PCWSTR type = RT_RCDATA, HINSTANCE module = wil::GetModuleInstanceHandle())
+{
+    if (HRSRC resourceHandle = FindResourceW(module, name, type))
     {
-        auto w = instance.m_window.get();
-        ShowWindow(w, nCmdShow);
-        UpdateWindow(w);
-
-        MSG msg{};
-        while (GetMessageW(&msg, nullptr, 0, 0))
+        if (HGLOBAL resourceData = LoadResource(module, resourceHandle))
         {
-            TranslateMessage(&msg);
-            DispatchMessageW(&msg);
+            auto resourceSize = SizeofResource(module, resourceHandle);
+            return {static_cast<T*>(LockResource(resourceData)), resourceSize / sizeof(T)};
         }
     }
+    return {};
+}
 
-    // T must have wil::unique_hwnd m_window.
-    template <typename T>
-    void enter_com_message_loop(T& instance, UINT nCmdShow, wil::unique_event& shutdownSignal)
-    {
-        auto w = instance.m_window.get();
-        ShowWindow(w, nCmdShow);
-        UpdateWindow(w);
-
-        // Ensure a continuous Xaml lifetime on this thread.
-        auto xamlManager = winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
-
-        DWORD index{};
-        HANDLE waitArray[]{ shutdownSignal.get() };
-        FAIL_FAST_IF_FAILED(CoWaitForMultipleHandles(COWAIT_DISPATCH_CALLS | COWAIT_DISPATCH_WINDOW_MESSAGES, INFINITE,
-            ARRAYSIZE(waitArray), waitArray, &index));
-
-        // Need an extra message loop to enable Xaml to finish its rundown.
-        PostQuitMessage(0); // ensures we terminate the loop when Xaml is done.
-        MSG msg{};
-        while (GetMessageW(&msg, nullptr, 0, 0))
-        {
-            DispatchMessageW(&msg);
-        }
-    }
 }
 

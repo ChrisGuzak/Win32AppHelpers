@@ -27,13 +27,11 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config">
-      <Filter>build</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Manifest Include="win32_app.manifest">
       <Filter>build</Filter>
     </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
