@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>Win32AppHelpers</id>
-        <version>0.0.07</version>
+        <version>0.0.08</version>
         <title>Win32 App Helpers</title>
         <authors>chris_guzak@msn.com</authors>
         <owners>chris_guzak@msn.com</owners>
