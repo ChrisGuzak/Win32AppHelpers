@@ -1,8 +1,10 @@
 #pragma once
 #include <winuser.h>
+#undef GetCurrentTime
 #include <wil/win32_helpers.h>
 #include <string_view>
 #include "is_detected.h"
+#include <winrt/Windows.UI.Xaml.Hosting.h>
 
 namespace win32app
 {
