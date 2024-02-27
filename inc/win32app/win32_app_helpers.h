@@ -1,5 +1,9 @@
 #pragma once
 #include <winuser.h>
+#undef GetCurrentTime // avoid conflict with winuser.h
+
+#include <winrt/windows.ui.xaml.hosting.h>
+
 #include "is_detected.h"
 
 namespace win32app
