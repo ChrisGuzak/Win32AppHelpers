@@ -10,86 +10,89 @@
 namespace win32app::details
 {
 
-    inline void TestUsageUnrolled()
+inline void TestUsageUnrolled()
+{
+    struct Window
     {
-        struct Window
+        LRESULT Size(unsigned short, unsigned short)
         {
-            LRESULT Size(unsigned short, unsigned short)
-            {
-                static_assert(msg<WM_SIZE, Window>::is_valid);
-                return 0;
-            }
-        };
-
-        using size = msg<WM_SIZE, Window>;
-        static_assert(size::is_valid);
-    }
-
-    template<unsigned int value> void TestOneMessage()
-    {
-        struct Window
-        {
-            LRESULT Size(unsigned short, unsigned short)
-            {
-                static_assert(msg<WM_SIZE, decltype(*this)>::is_valid);
-                return 0;
-            }
-            LRESULT Move(unsigned short, unsigned short)
-            {
-                static_assert(msg<WM_MOVE, decltype(*this)>::is_valid);
-                return 0;
-            }
-            LRESULT Create()
-            {
-                static_assert(msg<WM_CREATE, decltype(*this)>::is_valid);
-                return 0;
-            }
-            LRESULT Destroy()
-            {
-                static_assert(msg<WM_DESTROY, decltype(*this)>::is_valid);
-                return 0;
-            }
-            LRESULT Paint(HDC hdc, const PAINTSTRUCT& ps)
-            {
-                static_assert(msg<WM_PAINT, decltype(*this)>::is_valid);
-                return 0;
-            }
-            LRESULT Command(unsigned int id)
-            {
-                static_assert(msg<WM_COMMAND, decltype(*this)>::is_valid);
-                return 0;
-            }
-            LRESULT DeviceChange(unsigned int dbt /* DBT_*/, void* input)
-            {
-                static_assert(msg<WM_DEVICECHANGE, decltype(*this)>::is_valid);
-                return 0;
-            }
-        };
-
-        static_assert(msg<value, Window>::is_valid, "'value' is not supported, update code above to add it.");
-    }
-
-    inline void TestUsage()
-    {
-        {
-            struct Window {};
-            // negative test for unsupported messages
-            using neverDefined = msg<WM_SPOOLERSTATUS, Window>;
-            static_assert(!neverDefined::is_valid);
-            static_assert(neverDefined::value == WM_SPOOLERSTATUS);
+            static_assert(msg<WM_SIZE, Window>::is_valid);
+            return 0;
         }
+    };
 
-        // Enable and verify that the static assert message is useful
-        // TestOneMessage<WM_SPOOLERSTATUS>();
-
-        TestOneMessage<WM_SIZE>();
-        TestOneMessage<WM_MOVE>();
-        TestOneMessage<WM_DESTROY>();
-        TestOneMessage<WM_PAINT>();
-        TestOneMessage<WM_COMMAND>();
-        TestOneMessage<WM_DEVICECHANGE>();
-    }
+    using size = msg<WM_SIZE, Window>;
+    static_assert(size::is_valid);
 }
+
+template <unsigned int value>
+void TestOneMessage()
+{
+    struct Window
+    {
+        LRESULT Size(unsigned short, unsigned short)
+        {
+            static_assert(msg<WM_SIZE, decltype(*this)>::is_valid);
+            return 0;
+        }
+        LRESULT Move(unsigned short, unsigned short)
+        {
+            static_assert(msg<WM_MOVE, decltype(*this)>::is_valid);
+            return 0;
+        }
+        LRESULT Create()
+        {
+            static_assert(msg<WM_CREATE, decltype(*this)>::is_valid);
+            return 0;
+        }
+        LRESULT Destroy()
+        {
+            static_assert(msg<WM_DESTROY, decltype(*this)>::is_valid);
+            return 0;
+        }
+        LRESULT Paint(HDC hdc, const PAINTSTRUCT& ps)
+        {
+            static_assert(msg<WM_PAINT, decltype(*this)>::is_valid);
+            return 0;
+        }
+        LRESULT Command(unsigned int id)
+        {
+            static_assert(msg<WM_COMMAND, decltype(*this)>::is_valid);
+            return 0;
+        }
+        LRESULT DeviceChange(unsigned int dbt /* DBT_*/, void* input)
+        {
+            static_assert(msg<WM_DEVICECHANGE, decltype(*this)>::is_valid);
+            return 0;
+        }
+    };
+
+    static_assert(msg<value, Window>::is_valid, "'value' is not supported, update code above to add it.");
+}
+
+inline void TestUsage()
+{
+    {
+        struct Window
+        {
+        };
+        // negative test for unsupported messages
+        using neverDefined = msg<WM_SPOOLERSTATUS, Window>;
+        static_assert(!neverDefined::is_valid);
+        static_assert(neverDefined::value == WM_SPOOLERSTATUS);
+    }
+
+    // Enable and verify that the static assert message is useful
+    // TestOneMessage<WM_SPOOLERSTATUS>();
+
+    TestOneMessage<WM_SIZE>();
+    TestOneMessage<WM_MOVE>();
+    TestOneMessage<WM_DESTROY>();
+    TestOneMessage<WM_PAINT>();
+    TestOneMessage<WM_COMMAND>();
+    TestOneMessage<WM_DEVICECHANGE>();
+}
+} // namespace win32app::details
 
 struct SimplestAppWindow
 {

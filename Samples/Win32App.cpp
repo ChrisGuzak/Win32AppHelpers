@@ -41,13 +41,14 @@ struct AppWindow
         const float dpiScaledX = (drawOffset * dpi) / 96;
         const float dpiScaledY = (drawOffset * dpi) / 96;
 
-        const wchar_t message[]{ L"Hello from GDIPlus!" };
-        graphics.DrawString(message, static_cast<int>(wcslen(message)), &font, { dpiScaledX, dpiScaledY }, &brush);
+        const wchar_t message[]{L"Hello from GDIPlus!"};
+        graphics.DrawString(message, static_cast<int>(wcslen(message)), &font, {dpiScaledX, dpiScaledY}, &brush);
         return 0;
     }
 };
 
-_Use_decl_annotations_ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, PWSTR lpCmdLine, int nCmdShow)
+_Use_decl_annotations_
+int APIENTRY wWinMain(HINSTANCE, HINSTANCE, PWSTR lpCmdLine, int nCmdShow)
 {
     auto coInit = wil::CoInitializeEx(COINIT_APARTMENTTHREADED);
     std::make_unique<AppWindow>()->Show(nCmdShow);
