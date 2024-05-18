@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>Win32AppHelpers</id>
-        <version>0.0.09</version>
+        <version>0.0.10</version>
         <title>Win32 App Helpers</title>
         <authors>chris_guzak@msn.com</authors>
         <owners>chris_guzak@msn.com</owners>
@@ -12,7 +12,7 @@
         <description>Library for creating Win32 style GUI programs.</description>
         <tags>windows native C++</tags>
         <dependencies>
-            <dependency id="Microsoft.Windows.ImplementationLibrary" version="1.0.201120.3"/>
+            <dependency id="Microsoft.Windows.ImplementationLibrary" version="1.0.*"/>
         </dependencies>
     </metadata>
     <files>

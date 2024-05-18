@@ -3,6 +3,8 @@
 #undef GetCurrentTime // avoid conflict with winuser.h
 
 #include <wil/win32_helpers.h>
+#include <wil/stl.h>
+#include <string>
 #include <string_view>
 #include <winrt/Windows.UI.Xaml.Hosting.h>
 
@@ -260,6 +262,14 @@ void enter_com_message_loop(T& instance, UINT nCmdShow, wil::unique_event& shutd
     }
 }
 
+template <typename T = std::wstring_view>
+std::wstring_view get_resource_string_view(UINT resourceId, HINSTANCE module = wil::GetModuleInstanceHandle())
+{
+    PCWSTR messageStringBuffer{};
+    auto messageStringLength = LoadStringW(module, resourceId, reinterpret_cast<PWSTR>(&messageStringBuffer), 0);
+    return {messageStringBuffer, static_cast<size_t>(messageStringLength)};
+}
+
 template <typename T = char> // default to UTF-8, use wchar_t for UTF-16
 std::basic_string_view<T> get_resource_view(PCWSTR name, PCWSTR type = RT_RCDATA, HINSTANCE module = wil::GetModuleInstanceHandle())
 {
@@ -272,6 +282,23 @@ std::basic_string_view<T> get_resource_view(PCWSTR name, PCWSTR type = RT_RCDATA
         }
     }
     return {};
+}
+
+// auto json = get_resource_string_view(ID_JSON_FILE);
+template <typename T = char> // default to UTF-8, use wchar_t for UTF-16
+inline std::basic_string_view<T> get_resource_view(UINT resourceId, PCWSTR type = RT_RCDATA, HINSTANCE module = wil::GetModuleInstanceHandle())
+{
+    return get_resource_view<T>(MAKEINTRESOURCEW(resourceId), type, module);
+}
+
+// Includes the trailing slash to make it easy to combine with a file name.
+inline std::wstring GetModuleFolder(HINSTANCE module = wil::GetModuleInstanceHandle())
+{
+    auto result = wil::GetModuleFileNameW<std::wstring>(module);
+    auto folder = result.rfind(L'\\');
+    FAIL_FAST_IF(folder == std::wstring::npos);
+    result.resize(folder + 1);
+    return result;
 }
 
 } // namespace win32app
