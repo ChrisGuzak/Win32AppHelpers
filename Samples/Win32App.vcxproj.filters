@@ -13,25 +13,17 @@
     <ClInclude Include="Resource.h">
       <Filter>build</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>build</Filter>
     </ClCompile>
     <ClCompile Include="Win32App.cpp" />
     <ClCompile Include="win32_app_helpers.tests.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="Win32App.rc">
       <Filter>build</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <Manifest Include="win32_app.manifest">
       <Filter>build</Filter>
     </Manifest>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
 </Project>

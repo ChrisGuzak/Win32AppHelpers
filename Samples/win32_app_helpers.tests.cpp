@@ -7,6 +7,8 @@
 // use this to iterate on adding new messages, this demonstrates what was used
 // to develop WM_SIZE.
 
+#include <win32app/XamlHostWindow.h>
+
 namespace win32app::details
 {
 

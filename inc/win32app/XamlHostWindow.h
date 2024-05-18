@@ -26,8 +26,9 @@
 
 #include <wil/resource.h>
 
-#include <win32app/win32_app_helpers.h>
-#include <win32app/reference_waiter.h>
+#include "win32_app_helpers.h"
+#include "reference_waiter.h"
+#include "utf8_helpers.h"
 
 struct XamlHostWindow : public std::enable_shared_from_this<XamlHostWindow>
 {
@@ -106,7 +107,7 @@ struct XamlHostWindow : public std::enable_shared_from_this<XamlHostWindow>
         THROW_IF_FAILED(interop->AttachToWindow(m_window.get()));
         THROW_IF_FAILED(interop->get_WindowHandle(&m_xamlSourceWindow));
 
-        auto contentText = skip_utf8_bom(win32app::get_resource_view(L"AppWindow.xaml", RT_RCDATA));
+        auto contentText = skip_utf8_bom(get_resource_view(L"AppWindow.xaml", RT_RCDATA));
         auto contentTextWide = from_utf8(contentText);
         auto content = winrt::Windows::UI::Xaml::Markup::XamlReader::Load(contentTextWide).as<winrt::Windows::UI::Xaml::UIElement>();
         m_xamlSource.Content(content);

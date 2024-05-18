@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31911.196
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34902.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32AppSample", "Win32App.vcxproj", "{B911E146-5EBE-43FD-9034-54B17D062701}"
 EndProject
@@ -12,8 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "inc_win32app", "inc_win32ap
 		..\README.md = ..\README.md
 		..\inc\win32app\reference_waiter.h = ..\inc\win32app\reference_waiter.h
 		..\inc\win32app\ResizeableDialog.h = ..\inc\win32app\ResizeableDialog.h
-		..\inc\win32app\win32_app_helpers.h = ..\inc\win32app\win32_app_helpers.h
+		..\inc\win32app\utf8_helpers.h = ..\inc\win32app\utf8_helpers.h
 		..\inc\win32app\Win32UI.h = ..\inc\win32app\Win32UI.h
+		..\inc\win32app\win32_app_helpers.h = ..\inc\win32app\win32_app_helpers.h
+		..\inc\win32app\XamlHostWindow.h = ..\inc\win32app\XamlHostWindow.h
 		..\inc\win32app\XamlWin32Helpers.h = ..\inc\win32app\XamlWin32Helpers.h
 	EndProjectSection
 EndProject
