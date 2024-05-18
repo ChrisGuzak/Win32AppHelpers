@@ -16,7 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "inc_win32app", "inc_win32ap
 		..\inc\win32app\Win32UI.h = ..\inc\win32app\Win32UI.h
 		..\inc\win32app\win32_app_helpers.h = ..\inc\win32app\win32_app_helpers.h
 		..\inc\win32app\XamlHostWindow.h = ..\inc\win32app\XamlHostWindow.h
-		..\inc\win32app\XamlWin32Helpers.h = ..\inc\win32app\XamlWin32Helpers.h
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NuGet", "NuGet", "{AE3517FB-D1B1-41AE-9233-11A0407764B6}"
