@@ -34,37 +34,37 @@ void TestOneMessage()
     {
         LRESULT Size(unsigned short, unsigned short)
         {
-            static_assert(msg<WM_SIZE, decltype(*this)>::is_valid);
+            static_assert(msg<WM_SIZE, Window>::is_valid);
             return 0;
         }
         LRESULT Move(unsigned short, unsigned short)
         {
-            static_assert(msg<WM_MOVE, decltype(*this)>::is_valid);
+            static_assert(msg<WM_MOVE, Window>::is_valid);
             return 0;
         }
         LRESULT Create()
         {
-            static_assert(msg<WM_CREATE, decltype(*this)>::is_valid);
+            static_assert(msg<WM_CREATE, Window>::is_valid);
             return 0;
         }
         LRESULT Destroy()
         {
-            static_assert(msg<WM_DESTROY, decltype(*this)>::is_valid);
+            static_assert(msg<WM_DESTROY, Window>::is_valid);
             return 0;
         }
         LRESULT Paint(HDC hdc, const PAINTSTRUCT& ps)
         {
-            static_assert(msg<WM_PAINT, decltype(*this)>::is_valid);
+            static_assert(msg<WM_PAINT, Window>::is_valid);
             return 0;
         }
         LRESULT Command(unsigned int id)
         {
-            static_assert(msg<WM_COMMAND, decltype(*this)>::is_valid);
+            static_assert(msg<WM_COMMAND, Window>::is_valid);
             return 0;
         }
         LRESULT DeviceChange(unsigned int dbt /* DBT_*/, void* input)
         {
-            static_assert(msg<WM_DEVICECHANGE, decltype(*this)>::is_valid);
+            static_assert(msg<WM_DEVICECHANGE, Window>::is_valid);
             return 0;
         }
     };

@@ -1,0 +1,22 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="ARM64" />
+  </Configurations>
+  <Folder Name="/inc_win32app/">
+    <File Path="../inc/win32app/is_detected.h" />
+    <File Path="../inc/win32app/LogWindow.h" />
+    <File Path="../inc/win32app/reference_waiter.h" />
+    <File Path="../inc/win32app/ResizeableDialog.h" />
+    <File Path="../inc/win32app/utf8_helpers.h" />
+    <File Path="../inc/win32app/Win32UI.h" />
+    <File Path="../inc/win32app/win32_app_helpers.h" />
+    <File Path="../inc/win32app/XamlHostWindow.h" />
+    <File Path="../README.md" />
+  </Folder>
+  <Folder Name="/NuGet/">
+    <File Path="../NuGet/Package-Win32AppHelpers.ps1" />
+    <File Path="../NuGet/Win32AppHelpers.nuspec" />
+  </Folder>
+  <Project Path="Win32App.vcxproj" Id="b911e146-5ebe-43fd-9034-54b17d062701" />
+</Solution>
